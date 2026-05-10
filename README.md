@@ -6,8 +6,9 @@
 
 ---
 
-## Overview
+## Preview
 
+![Portfolio Preview](https://github.com/pyd-07/portfolio/blob/45575687b89a2c396504fe746caca3a52baf3366/public/Screenshot%202026-05-10%20162801.png)
 ## Overview
 
 A modern developer portfolio focused on backend engineering, automation systems, and reliable software design.
