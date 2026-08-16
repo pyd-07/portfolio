@@ -15,17 +15,21 @@ const About = () => {
         </div>
         <div className="md:col-span-2 space-y-5 text-lg text-muted-foreground leading-[1.7]">
           <p>
-            I'm a backend developer and automation engineer focused on systems
-            that are <span className="text-foreground">reliable, observable, and quietly efficient</span>.
+            I'm a backend developer focused on building
+            <span className="text-foreground"> reliable, maintainable systems </span>
+            and understanding how they work beneath the surface.
           </p>
           <p>
-            My work centers on backend services, API design, and the kind of
-            automation that removes toil — test suites, CI pipelines, and tooling
-            that ships value without ceremony.
+            My work centers on backend services, API design, databases, and
+            <span className="text-foreground"> cloud-native engineering </span> including
+            contributing to Kyverno ecosystem through open-source
+            development in Go.
           </p>
           <p className="text-foreground font-medium">
-            I focus on building systems that are easy to maintain and hard to break.
+            I'm focused on growing into a systems-oriented engineer who can build,
+            debug, and improve production software from the application layer down.
           </p>
+
         </div>
       </div>
     </section>

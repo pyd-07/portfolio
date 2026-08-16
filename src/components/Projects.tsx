@@ -1,10 +1,10 @@
 import { Star, ExternalLink } from "lucide-react";
 import { useGithubRepos } from "@/hooks/useGithubRepos";
-import { PROFILE, SELECTED_REPOS, REPO_DETAILS } from "@/utils/constants";
+import { PROFILE, SELECTED_REPOS, REPO_DETAILS, REPO_OWNERS } from "@/utils/constants";
 import { useInView } from "@/hooks/useInView";
 
 const Projects = () => {
-  const { repos, loading, error } = useGithubRepos(PROFILE.githubUser, SELECTED_REPOS);
+  const { repos, loading, error } = useGithubRepos(PROFILE.githubUser, SELECTED_REPOS, REPO_OWNERS);
   const { ref, inView } = useInView<HTMLElement>();
 
   return (
@@ -40,7 +40,11 @@ const Projects = () => {
       {!loading && !error && (
         <div className="grid md:grid-cols-2 gap-5">
           {repos.map((repo) => {
-            const details = REPO_DETAILS[repo.name];
+            // GitHub API returns names in lowercase; do a case-insensitive lookup
+            const detailKey = Object.keys(REPO_DETAILS).find(
+              (k) => k.toLowerCase() === repo.name.toLowerCase()
+            );
+            const details = detailKey ? REPO_DETAILS[detailKey] : undefined;
             return (
               <a
                 key={repo.id}

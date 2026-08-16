@@ -7,6 +7,8 @@ interface Props {
 
 const links = [
   { href: "#projects", label: "Projects" },
+  { href: "#internships", label: "Experience" },
+  { href: "#contributions", label: "Contributions" },
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
   { href: "#contact", label: "Contact" },
@@ -41,7 +43,7 @@ const Navbar = ({ openPalette }: Props) => {
             aria-label="Open command palette"
           >
             <Command className="h-3.5 w-3.5" />
-            <span className="font-mono">⌘K</span>
+            <span className="font-mono">K</span>
           </button>
           <button
             onClick={toggleTheme}

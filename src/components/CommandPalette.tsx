@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { Folder, Moon, Github, Linkedin, Search } from "lucide-react";
+import { Folder, Moon, Github, Linkedin, Search, Briefcase, GitPullRequest } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { PROFILE } from "@/utils/constants";
 
@@ -21,6 +21,20 @@ const CommandPalette = ({ open, setOpen }: Props) => {
         icon: Folder,
         run: () => {
           document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+        },
+      },
+      {
+        label: "Go to Internships",
+        icon: Briefcase,
+        run: () => {
+          document.getElementById("internships")?.scrollIntoView({ behavior: "smooth" });
+        },
+      },
+      {
+        label: "Go to Contributions",
+        icon: GitPullRequest,
+        run: () => {
+          document.getElementById("contributions")?.scrollIntoView({ behavior: "smooth" });
         },
       },
       { label: "Toggle Theme", icon: Moon, run: toggleTheme },

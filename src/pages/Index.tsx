@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Projects from "@/components/Projects";
 import Proof from "@/components/Proof";
+import Internships from "@/components/Internships";
+import Contributions from "@/components/Contributions";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
@@ -19,6 +21,8 @@ const Index = () => {
         <Hero />
         <Projects />
         <Proof />
+        <Internships />
+        <Contributions />
         <About />
         <Skills />
         <Contact />
@@ -28,5 +32,6 @@ const Index = () => {
     </div>
   );
 };
+
 
 export default Index;

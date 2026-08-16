@@ -3,7 +3,7 @@ import { ArrowRight, Mail, FileDown } from "lucide-react";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { PROFILE, TYPING_PHRASES } from "@/utils/constants";
 import SystemDiagram from "./SystemDiagram";
-import TerminalPanel from "./TerminalPanel";
+import ContributionPanel from "./TerminalPanel";
 
 type Visual = "diagram" | "terminal";
 
@@ -89,12 +89,12 @@ const Hero = () => {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                terminal
+              git log
               </button>
             </div>
           </div>
           <div key={visual} className="animate-fade-in">
-            {visual === "diagram" ? <SystemDiagram /> : <TerminalPanel />}
+            {visual === "diagram" ? <SystemDiagram /> : <ContributionPanel />}
           </div>
         </div>
         </div>
