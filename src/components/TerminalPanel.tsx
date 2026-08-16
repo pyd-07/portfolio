@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { GitCommit, GitMerge, GitPullRequest, Zap } from "lucide-react";
 
-// Real contribution activity derived from the profile's constants.ts
 const COMMITS = [
   {
     hash: "a3f92c1",
@@ -49,7 +48,10 @@ const COMMITS = [
 
 type CommitType = "fix" | "feat" | "chore";
 
-const typeConfig: Record<CommitType, { color: string; Icon: React.FC<{ className?: string }> }> = {
+const typeConfig: Record<
+  CommitType,
+  { color: string; Icon: React.FC<{ className?: string }> }
+> = {
   fix: { color: "text-amber-400", Icon: Zap },
   feat: { color: "text-emerald-400", Icon: GitPullRequest },
   chore: { color: "text-blue-400", Icon: GitCommit },
@@ -59,7 +61,6 @@ const ContributionPanel = () => {
   const [visibleCount, setVisibleCount] = useState(0);
   const [done, setDone] = useState(false);
 
-  // Reveal commits one by one
   useEffect(() => {
     if (visibleCount >= COMMITS.length) {
       setDone(true);
@@ -70,7 +71,6 @@ const ContributionPanel = () => {
     return () => clearTimeout(t);
   }, [visibleCount]);
 
-  // Loop after a pause
   useEffect(() => {
     if (!done) return;
     const t = setTimeout(() => {
@@ -81,7 +81,7 @@ const ContributionPanel = () => {
   }, [done]);
 
   return (
-    <div className="relative w-full max-w-[560px] mx-auto">
+    <div className="relative w-full mx-auto">
       {/* Ambient glow */}
       <div
         aria-hidden
@@ -94,57 +94,70 @@ const ContributionPanel = () => {
 
       <div className="glass-surface rounded-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/50">
-          <div className="flex items-center gap-1.5">
+        <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border/50">
+          {/* Traffic lights */}
+          <div className="flex items-center gap-1.5 shrink-0">
             <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
             <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
             <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
           </div>
-          <div className="flex items-center gap-2 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
-            <GitMerge className="h-3 w-3" />
-            git log --author=pyd-07
+
+          {/* Title — hidden on very small screens, shown from sm up */}
+          <div className="hidden sm:flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-muted-foreground uppercase min-w-0 truncate">
+            <GitMerge className="h-3 w-3 shrink-0" />
+            <span className="truncate">git log --author=pyd-07</span>
           </div>
-          <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+
+          {/* Status dot */}
+          <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground shrink-0">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80 animate-pulse" />
             active
           </span>
         </div>
 
         {/* Commit list */}
-        <div className="p-4 space-y-0.5 min-h-[264px]">
+        <div className="p-3 sm:p-4 space-y-0.5 min-h-[200px] sm:min-h-[240px]">
           {COMMITS.slice(0, visibleCount).map((commit, i) => {
-            const type = (commit.type as CommitType) in typeConfig ? (commit.type as CommitType) : "chore";
+            const type =
+              (commit.type as CommitType) in typeConfig
+                ? (commit.type as CommitType)
+                : "chore";
             const { color, Icon } = typeConfig[type];
             return (
               <div
                 key={commit.hash}
-                className="group flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-accent/40 transition-colors animate-fade-in"
+                className="group flex items-start gap-2 sm:gap-3 px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg hover:bg-accent/40 transition-colors animate-fade-in"
               >
-                {/* Graph line */}
+                {/* Icon + connector */}
                 <div className="flex flex-col items-center mt-0.5 shrink-0">
                   <Icon className={`h-3.5 w-3.5 ${color}`} />
                   {i < COMMITS.length - 1 && (
-                    <div className="w-px flex-1 mt-1 bg-border/60 min-h-[16px]" />
+                    <div className="w-px flex-1 mt-1 bg-border/60 min-h-[14px]" />
                   )}
                 </div>
 
+                {/* Content */}
                 <div className="flex-1 min-w-0">
-                  {/* Repo + hash */}
-                  <div className="flex items-center gap-2 mb-0.5">
+                  {/* Repo + hash row */}
+                  <div className="flex items-center gap-1.5 mb-0.5 min-w-0">
                     <span className="font-mono text-[10px] text-muted-foreground truncate">
                       {commit.repo}
                     </span>
-                    <span className="font-mono text-[10px] text-muted-foreground/60 shrink-0">
+                    {/* Hash hidden on xs to avoid overflow */}
+                    <span className="hidden xs:inline font-mono text-[10px] text-muted-foreground/60 shrink-0">
                       #{commit.hash}
                     </span>
                   </div>
                   {/* Message */}
-                  <p className="font-mono text-[11.5px] text-foreground/85 leading-snug truncate">
-                    <span className={`${color} font-medium`}>{commit.type}: </span>
+                  <p className="font-mono text-[11px] sm:text-[11.5px] text-foreground/85 leading-snug line-clamp-2 sm:line-clamp-1">
+                    <span className={`${color} font-medium`}>
+                      {commit.type}:{" "}
+                    </span>
                     {commit.message.replace(/^(fix|feat|chore): /, "")}
                   </p>
                 </div>
 
+                {/* Timestamp */}
                 <span className="font-mono text-[10px] text-muted-foreground/60 shrink-0 mt-0.5">
                   {commit.time}
                 </span>
@@ -154,19 +167,23 @@ const ContributionPanel = () => {
 
           {/* Blinking cursor */}
           {!done && (
-            <div className="flex items-center gap-3 px-3 py-2.5">
+            <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2">
               <GitCommit className="h-3.5 w-3.5 text-muted-foreground/40" />
-              <span className="cursor-blink font-mono text-[12px] text-foreground/50">▋</span>
+              <span className="cursor-blink font-mono text-[12px] text-foreground/50">
+                ▋
+              </span>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-5 py-3 border-t border-border/50 font-mono text-[10px] text-muted-foreground">
-          <span>↳ {COMMITS.length} contributions · kyverno + personal</span>
-          <span className="flex items-center gap-1.5">
+        <div className="flex items-center justify-between gap-2 px-4 py-3 border-t border-border/50 font-mono text-[10px] text-muted-foreground">
+          <span className="truncate">
+            ↳ {COMMITS.length} contributions · kyverno + personal
+          </span>
+          <span className="flex items-center gap-1.5 shrink-0">
             <GitMerge className="h-3 w-3 text-emerald-400/70" />
-            {COMMITS.filter((c) => c.type === "feat").length} merged PRs
+            {COMMITS.filter((c) => c.type === "feat").length} merged
           </span>
         </div>
       </div>

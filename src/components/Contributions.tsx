@@ -1,46 +1,61 @@
 import { useGithubPRs, useGithubComments } from "@/hooks/useGithubPRs";
 import { PROFILE } from "@/utils/constants";
 import { useInView } from "@/hooks/useInView";
-import { GitPullRequest, GitMerge, ExternalLink, Building2, MessageSquare } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  GitPullRequest,
+  GitMerge,
+  ExternalLink,
+  Building2,
+  MessageSquare,
+} from "lucide-react";
 
 const Contributions = () => {
   const { prs, orgs, loading, error } = useGithubPRs(PROFILE.githubUser);
-  const { comments, loading: commentsLoading, error: commentsError } = useGithubComments(PROFILE.githubUser);
+  const {
+    comments,
+    loading: commentsLoading,
+    error: commentsError,
+  } = useGithubComments(PROFILE.githubUser);
   const { ref, inView } = useInView<HTMLElement>();
 
-  // Format date helper
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
-  };
 
   return (
     <section
       id="contributions"
       ref={ref}
-      className={`container py-24 md:py-32 border-t border-border reveal ${inView ? "in-view" : ""}`}
+      className={`container py-24 md:py-32 border-t border-border reveal ${
+        inView ? "in-view" : ""
+      }`}
     >
+      {/* ─ Desktop: 3-col grid (left sidebar + wide PR column)
+           ── Mobile: stacked single column */}
       <div className="grid lg:grid-cols-3 gap-12">
-        {/* Left Column: Heading, Organizations, and Comments */}
+
+        {/* ─ Left Column: Heading, Organizations, Comments ─ */}
         <div className="space-y-8">
           <div>
-            <p className="text-sm font-mono text-muted-foreground mb-2">// contributions</p>
+            <p className="text-sm font-mono text-muted-foreground mb-2">
+              // contributions
+            </p>
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
               Open source
             </h2>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-sm">
-              Pull requests merged and open across public repositories and communities.
+              Pull requests merged and open across public repositories and
+              communities.
             </p>
           </div>
 
-          {/* Organizations list */}
+          {/* Organizations */}
           <div className="space-y-4">
             <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <Building2 className="h-3.5 w-3.5" />
+              <Building2 className="h-3.5 w-3.5 shrink-0" />
               Contributed Organizations
             </h3>
 
@@ -56,7 +71,9 @@ const Contributions = () => {
             )}
 
             {!loading && !error && orgs.length === 0 && (
-              <p className="text-xs text-muted-foreground italic font-mono">// no external organization PRs found</p>
+              <p className="text-xs text-muted-foreground italic font-mono">
+                // no external organization PRs found
+              </p>
             )}
 
             {!loading && !error && orgs.length > 0 && (
@@ -67,14 +84,13 @@ const Contributions = () => {
                     href={org.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border bg-card hover:bg-accent/40 hover:border-foreground/20 transition-all text-xs font-medium text-foreground group"
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border bg-card hover:bg-accent/40 hover:border-foreground/20 transition-all text-xs font-medium text-foreground"
                   >
                     <img
                       src={org.avatarUrl}
                       alt={org.name}
                       className="w-4 h-4 rounded-sm object-cover bg-muted"
                       onError={(e) => {
-                        // Fallback in case image fails to load
                         (e.target as HTMLElement).style.display = "none";
                       }}
                     />
@@ -88,10 +104,10 @@ const Contributions = () => {
             )}
           </div>
 
-          {/* Recent Comments list */}
+          {/* Recent Comments */}
           <div className="space-y-4 pt-6 border-t border-border/60">
             <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <MessageSquare className="h-3.5 w-3.5" />
+              <MessageSquare className="h-3.5 w-3.5 shrink-0" />
               Recent Comments
             </h3>
 
@@ -107,7 +123,9 @@ const Contributions = () => {
             )}
 
             {!commentsLoading && !commentsError && comments.length === 0 && (
-              <p className="text-xs text-muted-foreground italic font-mono">// no recent public comments found</p>
+              <p className="text-xs text-muted-foreground italic font-mono">
+                // no recent public comments found
+              </p>
             )}
 
             {!commentsLoading && !commentsError && comments.length > 0 && (
@@ -124,10 +142,12 @@ const Contributions = () => {
                       "{comment.body}"
                     </p>
                     <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-muted-foreground">
-                      <span className="truncate max-w-[200px] text-foreground/80">
+                      <span className="truncate text-foreground/80">
                         {comment.repoName}#{comment.issueNumber}
                       </span>
-                      <span>{formatDate(comment.createdAt)}</span>
+                      <span className="shrink-0">
+                        {formatDate(comment.createdAt)}
+                      </span>
                     </div>
                   </a>
                 ))}
@@ -136,8 +156,8 @@ const Contributions = () => {
           </div>
         </div>
 
-        {/* Right Column: Pull Requests Timeline */}
-        <div className="lg:col-span-2 space-y-6 flex flex-col h-full">
+        {/* ── Right Column: Pull Requests Timeline (spans 2 cols on desktop) ── */}
+        <div className="lg:col-span-2 space-y-6">
           <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
             Pull Requests Timeline
           </h3>
@@ -166,62 +186,75 @@ const Contributions = () => {
           )}
 
           {!loading && !error && prs.length > 0 && (
-            <ScrollArea className="h-[600px] pr-4">
-              <div className="space-y-3 pr-2">
+            <div
+              className="overflow-y-auto pr-1"
+              style={{ maxHeight: "min(650px, 70vh)" }}
+            >
+              <div className="space-y-3 pb-1">
                 {prs.map((pr) => {
-                const isMerged = pr.state === "merged";
-                const isOpen = pr.state === "open";
+                  const isMerged = pr.state === "merged";
+                  const isOpen = pr.state === "open";
+                  return (
+                    <a
+                      key={pr.id}
+                      href={pr.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-start justify-between gap-4 p-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-accent/10 transition-all duration-300"
+                    >
+                      <div className="flex items-start gap-3 min-w-0">
+                        {/* Status icon */}
+                        <div className="mt-1 shrink-0">
+                          {isMerged ? (
+                            <div
+                              className="h-6 w-6 rounded-full bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 grid place-items-center"
+                              title="Merged"
+                            >
+                              <GitMerge className="h-3.5 w-3.5" />
+                            </div>
+                          ) : isOpen ? (
+                            <div
+                              className="h-6 w-6 rounded-full bg-green-500/10 dark:bg-green-500/15 text-green-600 dark:text-green-400 grid place-items-center"
+                              title="Open"
+                            >
+                              <GitPullRequest className="h-3.5 w-3.5" />
+                            </div>
+                          ) : (
+                            <div
+                              className="h-6 w-6 rounded-full bg-muted text-muted-foreground grid place-items-center"
+                              title="Closed"
+                            >
+                              <GitPullRequest className="h-3.5 w-3.5" />
+                            </div>
+                          )}
+                        </div>
 
-                return (
-                  <a
-                    key={pr.id}
-                    href={pr.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-start justify-between gap-4 p-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-accent/10 transition-all duration-300"
-                  >
-                    <div className="flex items-start gap-3">
-                      {/* PR Status Icon */}
-                      <div className="mt-1 flex-shrink-0">
-                        {isMerged ? (
-                          <div className="h-6 w-6 rounded-full bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 grid place-items-center" title="Merged">
-                            <GitMerge className="h-3.5 w-3.5" />
+                        {/* PR details */}
+                        <div className="space-y-1 min-w-0">
+                          <h4 className="text-sm font-medium text-foreground leading-snug group-hover:text-foreground transition-colors">
+                            {pr.title}
+                          </h4>
+                          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs font-mono text-muted-foreground">
+                            <span className="text-foreground/80 font-medium truncate">
+                              {pr.repoOwner}/{pr.repoName}#{pr.number}
+                            </span>
+                            <span className="shrink-0">•</span>
+                            <span className="shrink-0">
+                              {formatDate(pr.createdAt)}
+                            </span>
                           </div>
-                        ) : isOpen ? (
-                          <div className="h-6 w-6 rounded-full bg-green-500/10 dark:bg-green-500/15 text-green-600 dark:text-green-400 grid place-items-center" title="Open">
-                            <GitPullRequest className="h-3.5 w-3.5" />
-                          </div>
-                        ) : (
-                          <div className="h-6 w-6 rounded-full bg-muted text-muted-foreground grid place-items-center" title="Closed">
-                            <GitPullRequest className="h-3.5 w-3.5" />
-                          </div>
-                        )}
-                      </div>
-
-                      {/* PR details */}
-                      <div className="space-y-1">
-                        <h4 className="text-sm font-medium text-foreground leading-snug group-hover:text-foreground transition-colors pr-2">
-                          {pr.title}
-                        </h4>
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs font-mono text-muted-foreground">
-                          <span className="text-foreground/80 font-medium">
-                            {pr.repoOwner}/{pr.repoName}#{pr.number}
-                          </span>
-                          <span>•</span>
-                          <span>{formatDate(pr.createdAt)}</span>
                         </div>
                       </div>
-                    </div>
 
-                    {/* External Link icon on hover */}
-                    <div className="mt-1 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </div>
-                  </a>
-                );
-              })}
+                      {/* External link */}
+                      <div className="mt-1 shrink-0 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
-            </ScrollArea>
+            </div>
           )}
         </div>
       </div>
