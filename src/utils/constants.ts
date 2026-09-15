@@ -10,7 +10,7 @@ export const PROFILE = {
 
 export const SELECTED_REPOS = [
   "Kyverno",
-  "DevWrapped",
+  "dev-wrap",
   "Uptor",
   "api-test-suite",
 ];
@@ -40,7 +40,7 @@ export const REPO_DETAILS: Record<
     ],
   },
 
-  DevWrapped: {
+  "dev-wrap": {
     bullets: [
       "Built an asynchronous GitHub developer analytics platform that turns repository activity into an editorial-style dashboard of contributions, commits, pull requests, reviews, issues, languages, and streaks",
       "Designed a Next.js → Redis queue → Go worker → GitHub GraphQL → Redis pipeline with distributed audit locking, background processing, result caching, and adaptive status polling",
@@ -133,7 +133,7 @@ export const SKILLS: Record<string, { name: string; context: string }[]> = {
     },
   ],
 
-  DevOps & Infrastructure: [
+  "DevOps & Infrastructure": [
     { name: "Docker", context: "Containerized development and deployment" },
     { name: "Docker Compose", context: "Multi-service local orchestration and deployment" },
     { name: "Linux", context: "Daily development and systems work" },
