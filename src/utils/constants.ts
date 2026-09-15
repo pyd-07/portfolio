@@ -12,6 +12,7 @@ export const SELECTED_REPOS = [
   "Kyverno",
   "Uptor",
   "api-test-suite",
+  "dev-wrap",
 ];
 
 // Map repo name → GitHub owner (for repos not under your own account)
