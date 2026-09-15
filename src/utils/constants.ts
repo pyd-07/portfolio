@@ -10,9 +10,9 @@ export const PROFILE = {
 
 export const SELECTED_REPOS = [
   "Kyverno",
+  "dev-wrap",
   "Uptor",
   "api-test-suite",
-  "dev-wrap",
 ];
 
 // Map repo name → GitHub owner (for repos not under your own account)
@@ -37,6 +37,23 @@ export const REPO_DETAILS: Record<
       "CEL",
       "Kyverno",
       "Open Source",
+    ],
+  },
+
+  "dev-wrap": {
+    bullets: [
+      "Built an asynchronous GitHub developer analytics platform that turns repository activity into an editorial-style dashboard of contributions, commits, pull requests, reviews, issues, languages, and streaks",
+      "Designed a Next.js → Redis queue → Go worker → GitHub GraphQL → Redis pipeline with distributed audit locking, background processing, result caching, and adaptive status polling",
+      "Containerized the complete stack with Docker Compose and documented the architecture, API contracts, metrics, development workflow, and deployment topology",
+    ],
+    tags: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Go",
+      "Redis",
+      "GraphQL",
+      "Docker",
     ],
   },
 
@@ -91,6 +108,8 @@ export const SKILLS: Record<string, { name: string; context: string }[]> = {
     { name: "Go", context: "Production code and systems-oriented backend work" },
     { name: "Node.js", context: "APIs, services, and backend tooling" },
     { name: "REST APIs", context: "Designing, integrating, and debugging APIs" },
+    { name: "GraphQL", context: "GitHub data retrieval and API-driven analytics" },
+    { name: "Redis", context: "Asynchronous job queues, locks, caching, and pipeline state" },
     { name: "MongoDB", context: "Application data and querying" },
     { name: "PostgreSQL", context: "Relational data and structured queries" },
   ],
@@ -114,10 +133,14 @@ export const SKILLS: Record<string, { name: string; context: string }[]> = {
     },
   ],
 
+  "DevOps & Infrastructure": [
+    { name: "Docker", context: "Containerized development and deployment" },
+    { name: "Docker Compose", context: "Multi-service local orchestration and deployment" },
+    { name: "Linux", context: "Daily development and systems work" },
+  ],
+
   Tools: [
     { name: "Git", context: "Version control and open-source collaboration" },
-    { name: "Linux", context: "Daily development and systems work" },
-    { name: "Docker", context: "Containerized development and deployment" },
     { name: "Postman", context: "API testing and debugging" },
   ],
 };
@@ -129,6 +152,12 @@ export const PROOF = [
     detail:
       "Contributed multiple merged fixes across the Kyverno engine, CEL evaluation, webhooks, background scanning, and autogen paths.",
     keywords: ["Go", "Kubernetes", "Kyverno", "Open Source"],
+  },
+  {
+    title: "DevWrapped GitHub analytics platform",
+    detail:
+      "Built an asynchronous GitHub audit pipeline with a Next.js frontend, Go worker engine, Redis queue/cache, GraphQL integration, and Dockerized deployment.",
+    keywords: ["Go", "Next.js", "Redis", "GraphQL", "Docker"],
   },
   {
     title: "API testing CLI",
