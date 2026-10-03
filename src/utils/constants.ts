@@ -5,7 +5,7 @@ export const PROFILE = {
   githubUser: "pyd-07",
   linkedin: "https://www.linkedin.com/in/am-piyush-wby/",
   email: "piyush.24448@knit.ac.in",
-  resume: "/resume.docx",
+  resume: "/Resume.pdf",
 };
 
 export const SELECTED_REPOS = [
@@ -108,7 +108,6 @@ export const SKILLS: Record<string, { name: string; context: string }[]> = {
     { name: "Go", context: "Production code and systems-oriented backend work" },
     { name: "Node.js", context: "APIs, services, and backend tooling" },
     { name: "REST APIs", context: "Designing, integrating, and debugging APIs" },
-    { name: "GraphQL", context: "GitHub data retrieval and API-driven analytics" },
     { name: "Redis", context: "Asynchronous job queues, locks, caching, and pipeline state" },
     { name: "MongoDB", context: "Application data and querying" },
     { name: "PostgreSQL", context: "Relational data and structured queries" },
