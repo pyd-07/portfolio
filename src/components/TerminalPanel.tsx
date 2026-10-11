@@ -52,16 +52,28 @@ const typeConfig: Record<
   CommitType,
   { color: string; Icon: React.FC<{ className?: string }> }
 > = {
-  fix: { color: "text-amber-400", Icon: Zap },
-  feat: { color: "text-emerald-400", Icon: GitPullRequest },
-  chore: { color: "text-blue-400", Icon: GitCommit },
+  fix: { color: "text-tech", Icon: Zap },
+  feat: { color: "text-primary", Icon: GitPullRequest },
+  chore: { color: "text-muted-foreground", Icon: GitCommit },
 };
 
 const ContributionPanel = () => {
   const [visibleCount, setVisibleCount] = useState(0);
   const [done, setDone] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
+    setReducedMotion(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }, []);
+
+  useEffect(() => {
+    // Reduced motion: show the full list immediately, no cycling
+    if (reducedMotion) {
+      setVisibleCount(COMMITS.length);
+      return;
+    }
     if (visibleCount >= COMMITS.length) {
       setDone(true);
       return;
@@ -69,30 +81,30 @@ const ContributionPanel = () => {
     const delay = visibleCount === 0 ? 400 : 480;
     const t = setTimeout(() => setVisibleCount((c) => c + 1), delay);
     return () => clearTimeout(t);
-  }, [visibleCount]);
+  }, [visibleCount, reducedMotion]);
 
   useEffect(() => {
-    if (!done) return;
+    if (!done || reducedMotion) return;
     const t = setTimeout(() => {
       setDone(false);
       setVisibleCount(0);
     }, 5000);
     return () => clearTimeout(t);
-  }, [done]);
+  }, [done, reducedMotion]);
 
   return (
     <div className="relative w-full mx-auto">
-      {/* Ambient glow */}
+      {/* Quiet indigo ambience */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 blur-3xl opacity-60"
+        className="absolute inset-0 -z-10 blur-3xl opacity-70"
         style={{
           background:
-            "radial-gradient(60% 50% at 70% 30%, hsl(220 90% 55% / 0.12), transparent 70%), radial-gradient(50% 50% at 30% 80%, hsl(265 80% 60% / 0.10), transparent 70%)",
+            "radial-gradient(60% 50% at 70% 30%, hsl(255 92% 76% / 0.10), transparent 70%), radial-gradient(50% 50% at 30% 80%, hsl(199 96% 74% / 0.05), transparent 70%)",
         }}
       />
 
-      <div className="glass-surface rounded-2xl overflow-hidden">
+      <div className="glass-surface rounded-xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border/50">
           {/* Traffic lights */}
@@ -102,7 +114,7 @@ const ContributionPanel = () => {
             <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
           </div>
 
-          {/* Title — hidden on very small screens, shown from sm up */}
+          {/* Title - hidden on very small screens, shown from sm up */}
           <div className="hidden sm:flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-muted-foreground uppercase min-w-0 truncate">
             <GitMerge className="h-3 w-3 shrink-0" />
             <span className="truncate">git log --author=pyd-07</span>
@@ -110,7 +122,7 @@ const ContributionPanel = () => {
 
           {/* Status dot */}
           <span className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground shrink-0">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80 animate-pulse" />
+            <span className="h-1.5 w-1.5 rounded-full bg-tech animate-pulse" />
             active
           </span>
         </div>
@@ -182,7 +194,7 @@ const ContributionPanel = () => {
             ↳ {COMMITS.length} contributions · kyverno + personal
           </span>
           <span className="flex items-center gap-1.5 shrink-0">
-            <GitMerge className="h-3 w-3 text-emerald-400/70" />
+            <GitMerge className="h-3 w-3 text-primary/80" />
             {COMMITS.filter((c) => c.type === "feat").length} merged
           </span>
         </div>

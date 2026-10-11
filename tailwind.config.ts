@@ -7,13 +7,19 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: { DEFAULT: "1.25rem", md: "1.5rem", lg: "2rem" },
       screens: {
-        "2xl": "1400px",
+        DEFAULT: "100%",
+        sm: "100%",
+        md: "100%",
+        lg: "64rem",
+        xl: "70rem",
+        "2xl": "72rem",
       },
     },
     extend: {
       colors: {
+        tech: "hsl(var(--tech))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -59,9 +65,9 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0.625rem",
+        md: "0.5rem",
+        sm: "0.375rem",
       },
       keyframes: {
         "accordion-down": {
