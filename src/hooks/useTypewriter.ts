@@ -11,7 +11,24 @@ export const useTypewriter = (
   const [index, setIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
+  // Respect reduced motion: cycle phrases without animating characters
   useEffect(() => {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setText(phrases[0]);
+    const t = setInterval(
+      () => setIndex((i) => (i + 1) % phrases.length),
+      pause + 1000
+    );
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setText(phrases[index % phrases.length]);
+      return;
+    }
+
     const current = phrases[index % phrases.length];
 
     if (!deleting && text === current) {

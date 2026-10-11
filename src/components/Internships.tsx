@@ -1,70 +1,72 @@
-import { useInView } from "@/hooks/useInView";
 import { INTERNSHIPS } from "@/utils/constants";
 import { Calendar, MapPin } from "lucide-react";
 
-const Internships = () => {
-  const { ref, inView } = useInView<HTMLElement>();
+interface Props {
+  // Hide the section heading (used when a page header is already rendered)
+  showHeader?: boolean;
+}
 
-  return (
-    <section
-      id="internships"
-      ref={ref}
-      className={`container py-24 md:py-32 border-t border-border reveal ${inView ? "in-view" : ""}`}
-    >
-      <div className="grid md:grid-cols-3 gap-12">
+const Internships = ({ showHeader = true }: Props) => (
+  <section id="internships" className="container py-16 md:py-24">
+    <div className="grid md:grid-cols-3 gap-10 md:gap-12">
+      {showHeader && (
         <div>
-          <p className="text-sm font-mono text-muted-foreground mb-2">// experience</p>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+          <p className="kicker mb-3">// experience</p>
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
             Internships
           </h2>
           <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
             Professional work history and hands-on technical internships.
           </p>
         </div>
+      )}
 
-        <div className="md:col-span-2 space-y-12">
-          {INTERNSHIPS.map((item, index) => (
-            <div
-              key={`${item.company}-${item.role}-${index}`}
-              className="group flex flex-col gap-2 transition-colors hover:bg-accent/20 -mx-4 px-4 py-4 rounded-xl"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                <h3 className="text-lg font-semibold text-foreground tracking-tight">
-                  {item.role}{" "}
-                  <span className="text-muted-foreground font-normal">at</span>{" "}
-                  <span className="text-foreground/90">{item.company}</span>
-                </h3>
-              </div>
+      <div className={`${showHeader ? "md:col-span-2" : "md:col-span-3"}`}>
+        {INTERNSHIPS.map((item, index) => (
+          <article
+            key={`${item.company}-${item.role}-${index}`}
+            className="relative pl-6 md:pl-8 border-l border-border"
+          >
+            {/* Timeline marker */}
+            <span
+              aria-hidden
+              className="absolute left-0 top-1.5 -translate-x-1/2 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background"
+            />
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground font-mono mt-1">
+            <h3 className="text-lg font-semibold text-foreground tracking-tight">
+              {item.role}{" "}
+              <span className="text-muted-foreground font-normal">at</span>{" "}
+              <span className="text-foreground/90">{item.company}</span>
+            </h3>
+
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground font-mono">
+              <span className="flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5" aria-hidden />
+                {item.duration}
+              </span>
+              {item.location && (
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {item.duration}
+                  <MapPin className="h-3.5 w-3.5" aria-hidden />
+                  {item.location}
                 </span>
-                {item.location && (
-                  <span className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5" />
-                    {item.location}
-                  </span>
-                )}
-              </div>
-
-              <ul className="mt-4 space-y-2">
-                {item.bullets.map((bullet, bIdx) => (
-                  <li
-                    key={bIdx}
-                    className="text-sm text-muted-foreground leading-relaxed pl-4 relative before:content-['→'] before:absolute before:left-0 before:text-muted-foreground/50 before:font-mono"
-                  >
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
+              )}
             </div>
-          ))}
-        </div>
+
+            <ul className="mt-5 mb-12 space-y-2.5 last:mb-0">
+              {item.bullets.map((bullet, bIdx) => (
+                <li
+                  key={bIdx}
+                  className="text-sm text-muted-foreground leading-relaxed pl-4 relative before:content-['→'] before:absolute before:left-0 before:text-primary/70 before:font-mono"
+                >
+                  {bullet}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default Internships;

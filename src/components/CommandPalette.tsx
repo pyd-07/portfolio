@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
-import { Folder, Moon, Github, Linkedin, Search, Briefcase, GitPullRequest } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Moon, Github, Linkedin, Search, Folder, Briefcase, GitPullRequest, User, Mail, Home } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { PROFILE } from "@/utils/constants";
 
@@ -10,32 +11,34 @@ interface Props {
 
 const CommandPalette = ({ open, setOpen }: Props) => {
   const { toggleTheme } = useTheme();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
 
   // Define all available commands
   const commands = useMemo(
     () => [
+      { label: "Go to Home", icon: Home, run: () => navigate("/") },
       {
         label: "Go to Projects",
         icon: Folder,
-        run: () => {
-          document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
-        },
+        run: () => navigate("/projects"),
       },
       {
-        label: "Go to Internships",
+        label: "Go to Experience",
         icon: Briefcase,
-        run: () => {
-          document.getElementById("internships")?.scrollIntoView({ behavior: "smooth" });
-        },
+        run: () => navigate("/experience"),
       },
       {
-        label: "Go to Contributions",
+        label: "Go to Open Source",
         icon: GitPullRequest,
-        run: () => {
-          document.getElementById("contributions")?.scrollIntoView({ behavior: "smooth" });
-        },
+        run: () => navigate("/open-source"),
+      },
+      { label: "Go to About", icon: User, run: () => navigate("/about") },
+      {
+        label: "Go to Contact",
+        icon: Mail,
+        run: () => navigate("/contact"),
       },
       { label: "Toggle Theme", icon: Moon, run: toggleTheme },
       {
@@ -49,7 +52,7 @@ const CommandPalette = ({ open, setOpen }: Props) => {
         run: () => window.open(PROFILE.linkedin, "_blank"),
       },
     ],
-    [toggleTheme]
+    [navigate, toggleTheme]
   );
 
   const filtered = commands.filter((c) =>

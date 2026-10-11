@@ -1,6 +1,5 @@
 import { useGithubPRs, useGithubComments } from "@/hooks/useGithubPRs";
 import { PROFILE } from "@/utils/constants";
-import { useInView } from "@/hooks/useInView";
 import {
   GitPullRequest,
   GitMerge,
@@ -9,14 +8,18 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-const Contributions = () => {
+interface Props {
+  // Hide the section heading (used when a page header is already rendered)
+  showHeader?: boolean;
+}
+
+const Contributions = ({ showHeader = true }: Props) => {
   const { prs, orgs, loading, error } = useGithubPRs(PROFILE.githubUser);
   const {
     comments,
     loading: commentsLoading,
     error: commentsError,
   } = useGithubComments(PROFILE.githubUser);
-  const { ref, inView } = useInView<HTMLElement>();
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("en-US", {
@@ -26,32 +29,28 @@ const Contributions = () => {
     });
 
   return (
-    <section
-      id="contributions"
-      ref={ref}
-      className={`container py-24 md:py-32 border-t border-border reveal ${
-        inView ? "in-view" : ""
-      }`}
-    >
-      <div className="grid min-w-0 lg:grid-cols-3 gap-12">
+    <section className="container py-16 md:py-24">
+      <div className="grid min-w-0 lg:grid-cols-3 gap-10 lg:gap-12">
         <div className="min-w-0 space-y-8">
-          <div>
-            <p className="text-sm font-mono text-muted-foreground mb-2">
-              // contributions
-            </p>
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-              Open source
-            </h2>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-sm">
-              Pull requests merged and open across public repositories and
-              communities.
-            </p>
-          </div>
+          {showHeader && (
+            <div>
+              <p className="kicker mb-3">
+                // contributions
+              </p>
+              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
+                Open source
+              </h2>
+              <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-sm">
+                Pull requests merged and open across public repositories and
+                communities.
+              </p>
+            </div>
+          )}
 
           <div className="space-y-4">
-            <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <Building2 className="h-3.5 w-3.5 shrink-0" />
-              Contributed Organizations
+            <h3 className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+              <Building2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              Contributed organizations
             </h3>
 
             {loading && (
@@ -72,25 +71,25 @@ const Contributions = () => {
             )}
 
             {!loading && !error && orgs.length > 0 && (
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2">
                 {orgs.map((org) => (
                   <a
                     key={org.name}
                     href={org.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex max-w-full items-center gap-2 px-3.5 py-1.5 rounded-full border border-border bg-card hover:bg-accent/40 hover:border-foreground/20 transition-all text-xs font-medium text-foreground"
+                    className="inline-flex max-w-full items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card hover:border-foreground/20 hover:bg-accent/40 transition-colors text-xs font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <img
                       src={org.avatarUrl}
-                      alt={org.name}
+                      alt=""
                       className="w-4 h-4 rounded-sm object-cover bg-muted shrink-0"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = "none";
                       }}
                     />
                     <span className="truncate">{org.name}</span>
-                    <span className="text-[10px] text-muted-foreground font-mono bg-accent px-1.5 py-0.5 rounded-full shrink-0">
+                    <span className="text-[10px] text-muted-foreground font-mono bg-accent px-1.5 py-0.5 rounded-md shrink-0">
                       {org.prCount}
                     </span>
                   </a>
@@ -99,10 +98,10 @@ const Contributions = () => {
             )}
           </div>
 
-          <div className="space-y-4 pt-6 border-t border-border/60">
-            <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <MessageSquare className="h-3.5 w-3.5 shrink-0" />
-              Recent Comments
+          <div className="space-y-4 pt-6 border-t border-border">
+            <h3 className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+              <MessageSquare className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              Recent comments
             </h3>
 
             {commentsLoading && (
@@ -130,9 +129,9 @@ const Contributions = () => {
                     href={comment.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block min-w-0 p-3.5 rounded-xl border border-border bg-card/60 hover:bg-accent/20 hover:border-foreground/20 transition-all duration-300 space-y-2"
+                    className="group block min-w-0 card p-3.5 hover:border-foreground/20 transition-colors space-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <p className="text-xs text-muted-foreground italic leading-relaxed line-clamp-2 pl-3 border-l-2 border-border group-hover:border-muted-foreground/60 transition-colors break-words">
+                    <p className="text-xs text-muted-foreground italic leading-relaxed line-clamp-2 pl-3 border-l-2 border-border group-hover:border-primary/60 transition-colors break-words">
                       "{comment.body}"
                     </p>
                     <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-muted-foreground">
@@ -151,8 +150,8 @@ const Contributions = () => {
         </div>
 
         <div className="min-w-0 lg:col-span-2 space-y-6">
-          <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-            Pull Requests Timeline
+          <h3 className="text-xs font-mono text-muted-foreground">
+            Pull requests timeline
           </h3>
 
           {loading && (
@@ -173,15 +172,18 @@ const Contributions = () => {
           )}
 
           {!loading && !error && prs.length === 0 && (
-            <div className="rounded-xl border border-border bg-card/40 p-6 text-center text-sm text-muted-foreground font-mono">
+            <div className="card p-6 text-center text-sm text-muted-foreground font-mono">
               // no public pull requests found
             </div>
           )}
 
           {!loading && !error && prs.length > 0 && (
             <div
-              className="overflow-y-auto pr-1"
-              style={{ maxHeight: "min(650px, 70vh)" }}
+              className="overflow-y-auto overscroll-contain pr-1"
+              style={{
+                maxHeight: "min(650px, 70vh)",
+                contain: "paint",
+              }}
             >
               <div className="space-y-3 pb-1">
                 {prs.map((pr) => {
@@ -193,43 +195,46 @@ const Contributions = () => {
                       href={pr.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex min-w-0 items-start justify-between gap-4 p-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-accent/10 transition-all duration-300"
+                      className="group flex min-w-0 items-start justify-between gap-4 card p-4 hover:border-foreground/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <div className="flex min-w-0 items-start gap-3">
-                        <div className="mt-1 shrink-0">
+                        <div className="mt-0.5 shrink-0">
                           {isMerged ? (
                             <div
-                              className="h-6 w-6 rounded-full bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 grid place-items-center"
+                              className="h-6 w-6 rounded-md bg-primary/10 text-primary grid place-items-center"
                               title="Merged"
                             >
                               <GitMerge className="h-3.5 w-3.5" />
+                              <span className="sr-only">Merged</span>
                             </div>
                           ) : isOpen ? (
                             <div
-                              className="h-6 w-6 rounded-full bg-green-500/10 dark:bg-green-500/15 text-green-600 dark:text-green-400 grid place-items-center"
+                              className="h-6 w-6 rounded-md bg-tech/10 text-tech grid place-items-center"
                               title="Open"
                             >
                               <GitPullRequest className="h-3.5 w-3.5" />
+                              <span className="sr-only">Open</span>
                             </div>
                           ) : (
                             <div
-                              className="h-6 w-6 rounded-full bg-muted text-muted-foreground grid place-items-center"
+                              className="h-6 w-6 rounded-md bg-muted text-muted-foreground grid place-items-center"
                               title="Closed"
                             >
                               <GitPullRequest className="h-3.5 w-3.5" />
+                              <span className="sr-only">Closed</span>
                             </div>
                           )}
                         </div>
 
                         <div className="min-w-0 space-y-1">
-                          <h4 className="text-sm font-medium text-foreground leading-snug group-hover:text-foreground transition-colors break-words">
+                          <h4 className="text-sm font-medium text-foreground leading-snug group-hover:text-primary transition-colors break-words">
                             {pr.title}
                           </h4>
                           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs font-mono text-muted-foreground">
-                            <span className="max-w-full truncate text-foreground/80 font-medium">
+                            <span className="max-w-full truncate text-foreground/70">
                               {pr.repoOwner}/{pr.repoName}#{pr.number}
                             </span>
-                            <span className="shrink-0">•</span>
+                            <span className="shrink-0" aria-hidden>·</span>
                             <span className="shrink-0">
                               {formatDate(pr.createdAt)}
                             </span>
@@ -237,13 +242,13 @@ const Contributions = () => {
                         </div>
                       </div>
 
-                      <div className="mt-1 shrink-0 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
-                        <ExternalLink className="h-3.5 w-3.5" />
+                      <div className="mt-1 shrink-0 text-muted-foreground/60 group-hover:text-primary transition-colors">
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
                       </div>
                     </a>
                   );
                 })}
-              </div>
+            </div>
             </div>
           )}
         </div>

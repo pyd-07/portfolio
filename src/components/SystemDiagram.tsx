@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Cloud, Server, Database, Cpu, Bell, ListOrdered } from "lucide-react";
 
 // Minimal backend system flow visualization.
@@ -40,20 +41,27 @@ const getAnchor = (
 
 const SystemDiagram = () => {
   const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    setReducedMotion(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }, []);
 
   return (
     <div className="relative w-full max-w-[560px] mx-auto">
-      {/* Soft glow backdrop */}
+      {/* Quiet indigo ambience */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 blur-3xl opacity-60"
+        className="absolute inset-0 -z-10 blur-3xl opacity-70"
         style={{
           background:
-            "radial-gradient(60% 50% at 70% 30%, hsl(220 90% 55% / 0.12), transparent 70%), radial-gradient(50% 50% at 30% 80%, hsl(265 80% 60% / 0.10), transparent 70%)",
+            "radial-gradient(60% 50% at 70% 30%, hsl(255 92% 76% / 0.10), transparent 70%), radial-gradient(50% 50% at 30% 80%, hsl(199 96% 74% / 0.05), transparent 70%)",
         }}
       />
 
-      <div className="glass-surface rounded-2xl p-5 md:p-6">
+      <div className="glass-surface rounded-xl p-5 md:p-6">
         {/* Header bar */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-1.5">
@@ -112,15 +120,17 @@ const SystemDiagram = () => {
                   strokeWidth="1.25"
                   strokeLinecap="round"
                 />
-                {/* Animated flow pulse */}
-                <circle r="2.2" fill="hsl(var(--foreground))" opacity="0.7">
-                  <animateMotion
-                    dur={`${2.4 + i * 0.3}s`}
-                    repeatCount="indefinite"
-                    path={path}
-                    begin={`${i * 0.4}s`}
-                  />
-                </circle>
+                {/* Flow pulse (skipped for reduced motion) */}
+                {!reducedMotion && (
+                  <circle r="2.2" fill="hsl(var(--primary))" opacity="0.8">
+                    <animateMotion
+                      dur={`${2.4 + i * 0.3}s`}
+                      repeatCount="indefinite"
+                      path={path}
+                      begin={`${i * 0.4}s`}
+                    />
+                  </circle>
+                )}
               </g>
             );
           })}
@@ -138,7 +148,7 @@ const SystemDiagram = () => {
                   rx="10"
                   fill="hsl(var(--card))"
                   fillOpacity="0.85"
-                  stroke="hsl(var(--foreground) / 0.12)"
+                  stroke="hsl(var(--border))"
                   strokeWidth="1"
                 />
                 <foreignObject
@@ -159,15 +169,17 @@ const SystemDiagram = () => {
                   cx={n.x + NODE_W - 8}
                   cy={n.y + 8}
                   r="1.6"
-                  fill="hsl(var(--foreground))"
+                  fill="hsl(var(--primary))"
                   opacity="0.5"
                 >
-                  <animate
-                    attributeName="opacity"
-                    values="0.2;0.7;0.2"
-                    dur="2.6s"
-                    repeatCount="indefinite"
-                  />
+                  {!reducedMotion && (
+                    <animate
+                      attributeName="opacity"
+                      values="0.2;0.7;0.2"
+                      dur="2.6s"
+                      repeatCount="indefinite"
+                    />
+                  )}
                 </circle>
               </g>
             );
@@ -178,7 +190,7 @@ const SystemDiagram = () => {
         <div className="mt-4 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
           <span>↳ event-driven · idempotent · observable</span>
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-foreground/60 animate-pulse" />
+            <span className="h-1.5 w-1.5 rounded-full bg-tech animate-pulse" />
             healthy
           </span>
         </div>
